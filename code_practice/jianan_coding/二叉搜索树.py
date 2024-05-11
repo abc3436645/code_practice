@@ -1,3 +1,4 @@
+from numpy import right_shift
 from code_practice.data_structure import traverse
 
 
@@ -7,6 +8,8 @@ class TreeNode:
         self.left = left
         self.right = right
 
+
+# 通过使用辅助函数，增加函数参数列表，在参数中携带额外信息，将这种约束传递给子树的所有节点，这也是二叉树算法的一个小技巧吧
 
 # leetcode 230 二叉搜索树中第K小的元素
 class Solution:
@@ -74,7 +77,34 @@ class Solution:
             self.findInBST(root.left)
 
 
-# leetcode 98
+# leetcode 700 二叉搜索树的搜索
+class Solution:
+    def searchBST(self,root:TreeNode,target:int):
+        if not root:
+            return None 
+        if root.val == target:
+            return root
+        left = self.searchBST(root.left,target)
+        right = self.searchBST(root.right,targert)
+
+        return left if left else right
+
+class Solution:
+    def searchBST(self,root:TreeNode,target:int):
+        """
+        分解问题思路：以root为根的树，返回节点值等于target的值
+        """
+        if not root:
+            return None
+        if root.val < target:
+            return self.searchBST(root.left,target)
+        if root.val > target:
+            return self.searchBST(root.right,target)
+        
+        else:
+            return root
+
+# leetcode 98 验证二叉搜索树合法性
 class Solution:
     def isValidBST(self,root:TreeNode):
         return self.isValidBSTHelper(root,None,None)
@@ -91,4 +121,33 @@ class Solution:
             return False
         return self.isValidBSTHelper(root.left,min_node,root) and self.isValidBSTHelper(root.right,root,max_node)
         
+
+# leetcode 在BST中插入一个数
+class Solution:
+    def insertIntoBst(self,root:TreeNode,val:int):
+        if not root:
+            return TreeNode(val=val)
+        if root.val < val:
+            root.right = self.insertIntoBst(root.right,val)
+        elif root.val > val:
+            root.left = self.insertIntoBst(root.left,val)
+
+        return root
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
