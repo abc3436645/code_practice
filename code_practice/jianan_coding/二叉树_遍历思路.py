@@ -26,6 +26,13 @@ class TreeNode:
 如果单独抽出一个二叉树节点，它需要做什么事情？需要在什么时候（前/中/后序位置）做？其他的节点不用你操心，递归函数会帮你在所有节点上执行相同的操作。
 """
 
+"""递归三要素
+1.确定递归函数的参数和返回值： 确定哪些参数是递归的过程中需要处理的，那么就在递归函数里加上这个参数， 并且还要明确每次递归的返回值是什么进而确定递归函数的返回类型。
+2.确定终止条件： 写完了递归算法, 运行的时候，经常会遇到栈溢出的错误，就是没写终止条件或者终止条件写的不对，操作系统也是用一个栈的结构来保存每一层递归的信息，如果递归没有终止，操作系统的内存栈必然就会溢出。
+3.确定单层递归的逻辑： 确定每一层递归需要处理的信息。在这里也就会重复调用自己来实现递归的过程。
+
+"""
+
 
 # leetcode 124 二叉树最大路径和
 class Solution:
@@ -238,7 +245,7 @@ class Solution:
 class Solution:
     def rightSideView(self, root: TreeNode):
         """
-        分解问题思路：使用traverse函数配合外部变量来实现
+        遍历问题思路：使用traverse函数配合外部变量来实现
         """
         self.res = []
         self.depth = 0
@@ -250,7 +257,7 @@ class Solution:
         if not root:
             return
         self.depth += 1
-        if len(res) < self.depth:
+        if len(self.res) < self.depth:
             self.res.append(root.val)
         self.traverse(root.right)
         self.traverse(root.left)
