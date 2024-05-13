@@ -1,4 +1,8 @@
+from multiprocessing import parent_process
+from types import prepare_class
 from typing import Counter, List
+
+from numpy import left_shift, right_shift
 
 """有些题目，你按照拍脑袋的方式去做，可能发现需要在递归代码中调用其他递归函数计算字数的信息。
 一般来说，出现这种情况时你可以考虑用后序遍历的思维方式来优化算法，
@@ -138,13 +142,10 @@ class Solution:
         self.res[h - 1].append(root.val)
 
 
-from collections import defaultdict
-
-
 # leetcode 508. 出现次数最多的子树元素和
 class Solution:
     def __init__(self):
-        self.sumtoCount = defaultdict()
+        self.sumtoCount = {}
 
     def findFrequentTreeSum(self, root: TreeNode):
         self.sumtoCount(root)
@@ -165,3 +166,189 @@ class Solution:
         self.sumtoCount[res] = self.sumtoCount.get(res, 0) + 1
 
         return res
+
+
+# leetcode 563 二叉树的坡度
+"""
+一个树的节点的坡度定义即为，该节点左子树的节点之和和右子树节点之和的差的绝对值。如果没有左子树的话，左子树的节点之和为 0，没有右子树的话也是一样，空结点的坡度是 0。
+"""
+
+
+class Solution:
+    def findTilt(self, root: TreeNode):
+        self.res = 0
+        self.sumOfTree(root)
+        return self.res
+
+    def sumOfTree(self, root: TreeNode):
+        """
+        sum 函数记录二叉树的节点之和，在后序位置顺便计算二叉树的「坡度」即可
+        """
+        if not root:
+            return 0
+        left = self.sumOfTree(root.left)
+        right = self.sumOfTree(root.right)
+        self.res += abs(left - right)  # 顺便求出坡度
+
+        return left + right + root.val
+
+
+# leetcode 549 二叉树中最长连续序列
+class Solution:
+    def longestConsecutive(self, root: TreeNode):
+        self.res = 0
+        self.findSequence(root)
+        return self.res
+
+    def findSequence(self, root: TreeNode):
+        if not root:
+            return [0, 0]
+        left = self.findSequence(root.left)
+        right = self.findSequence(root.right)
+
+        leftIncrLen, leftDrecLen = left[0], left[0]
+        rightIncrLen, rightDecrLen = right[0], right[1]
+
+        rootIncrLen, rootDecrLen = 1, 1
+        if root.left:
+            if root.left.val - 1 == root.val:
+                rootIncrLen += leftIncrLen
+            if root.left.val + 1 == root.val:
+                rootDecrLen += leftDrecLen
+
+        if root.right:
+            if root.right.val - 1 == root.val:
+                rootIncrLen = max(rootIncrLen, rightIncrLen + 1)
+            if root.right.val + 1 == root.val:
+                rootDecrLen = max(rootDecrLen, rightDecrLen + 1)
+
+        # 子树递增序列 + 根节点 + 子树递减序列 = 题目要求的序列
+        # 因为 rootIncrLen 和 rootDecrLen 中都算上了 root 节点，所以减一
+        self.res = max(self.res, rootIncrLen + rootDecrLen - 1)
+
+        return [rootIncrLen, rootDecrLen]
+
+
+# leetcode 1325 删除给定值的叶子结点
+class Solution:
+    def removeLeafNodes(self, root: TreeNode, target: int):
+        if not root:
+            return None
+
+        root.left = self.removeLeafNodes(root.left)
+        root.right = self.removeLeafNodes(root.right)
+        if root.val == target and not root.left and not root.right:
+            return None
+
+        return root
+
+
+# leetcode 663 均匀树划分
+"""
+给定一棵有 n 个结点的二叉树，你的任务是检查是否可以通过去掉树上的一条边将树分成两棵，且这两棵树结点之和相等
+
+解题思路：如果我知道了整棵树所有节点之和 treeSum，那么如果存在一棵和为 treeSum / 2 的子树，就说明这棵二叉树是可以分解成两部分的
+"""
+
+
+class Solution:
+    def __init__(self) -> None:
+        self.subTreeSum = set()
+
+    def checkEqualTree(self, root: TreeNode):
+        tree_sum = root.val + self.sumOfTree(root.left) + self.sumOfTree(root.right)
+        if tree_sum % 2 != 0:
+            return False
+        return tree_sum // 2 in self.subTreeSum
+
+    def sumOfTree(self, root: TreeNode):
+        if not root:
+            return 0
+        left = self.sumOfTree(root.left)
+        right = self.sumOfTree(root.right)
+        rootSum = left + right + root.val
+
+        self.subTreeSum.add(rootSum)
+
+        return rootSum
+
+
+# leetcode 687 最长同值路径
+class Solution:
+    def __init__(self) -> None:
+        self.res = 0
+
+    def longestUnivaluePath(self, root: TreeNode):
+        if not root:
+            return 0
+        self.maxLen(root, root.val)
+        return self.res
+
+    def maxLen(self, root: TreeNode, parentVal: int):
+        """
+        定义：计算以 root 为根的这棵二叉树中，从 root 开始值为 parentVal 的最长树枝长度
+        """
+        if not root:
+            return 0
+        leftLen = self.maxLen(root.left, root.val)
+        rightLen = self.maxLen(root.right, root.val)
+        self.res = max(self.res, leftLen + rightLen)
+        if root.val != parentVal:
+            return 0
+
+        return max(leftLen, rightLen) + 1
+
+
+# leetcode 1026 节点与其祖先之间的最大差值
+class Solution:
+    def maxAncestorDiff(self, root: TreeNode):
+        self.res = 0
+        self.getMaxMin(root)
+        return self.res
+
+    def getMaxMin(self, root: TreeNode):
+        if not root:
+            return [float("inf"), float("-inf")]
+
+        left = self.getMaxMin(root.left)
+        right = self.getMaxMin(root.right)
+
+        rootMin = min(root.val, left[0], right[0])
+        rootMax = max(root.val, left[1], right[1])
+
+        self.res = max(self.res, abs(root.val - rootMin), abs(root.val - rootMax))
+
+        return [rootMin, rootMax]
+
+
+# leetcode 1120 子树的最大平均值
+"""
+那么我们站在一个节点上，需要知道子树的什么信息，才能计算出以这个节点为根的这棵树的平均值呢？
+
+显然，我们需要知道子树的节点个数和所有节点之和，就能算出平均值了
+"""
+
+
+class Solution:
+    def maximumAverageSubtree(self, root: TreeNode):
+        self.res = 0
+        self.getCountAndSum(root)
+
+        return self.res
+
+    def getCountAndSum(self, root: TreeNode):
+        if not root:
+            return [0, 0]
+
+        left = self.getCountAndSum(root.left)
+        right = self.getCountAndSum(root.right)
+
+        leftCount, leftSum = left[0], left[1]
+        rightCount, rightSum = right[0], right[1]
+
+        rootCount = leftCount + rightCount + 1
+        rootSum = leftSum + rightSum + root.val
+
+        self.res = max(self.res, 1.0 * (rootSum / rootCount))
+
+        return [rootCount, rootSum]
