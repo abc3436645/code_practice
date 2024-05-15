@@ -36,6 +36,12 @@ for 状态1 in 状态1的所有取值：
 """
 
 # leetcode 509 斐波那契数列
+from functools import cache
+from typing import List, cast
+
+from code_practice import dynamic_programming
+
+
 class Solution:
     def fib(self, n: int) -> int:
         self.memo = [0] * (n+1) # 备忘录
@@ -197,4 +203,130 @@ class Solution:
         # 按照 dp 数组的定义，存储 s1 和 s2 的最小编辑距离
         return dp[m][n]
 
+
+"""
+状态定义？状态转移方程？
+思路：选或不选/ 选哪个
+
+思考dfs func要怎么写：入参和返回值，递归到哪里，递归边界和入口
+改成记忆化搜索，也就是优化时间和空间复杂度
+1:1 翻译成dp数组 递推方式
+
+1:1从递归转换成递推
+    1. dfs -> dp数组
+    2. 递归 -> 循环
+    3. 递归边界 -> 数组初始值
+
+"""
+
+# leetcode 198 打家劫舍
+# dfs(i) = max(dfs(i-1),dfs(i-1)+nums[i])  可观察递归顺序
+# 递推：dp[i] = max(dp[i-1],dp[i-2]+nums[i])
+# 为防止溢出： dp[i+2] = max(dp[i+1],dp[i]+nums[i])
+
+class Solution:
+    def rob(self,nums:List[int]):
+        n = len(nums)
+        cache = [-1] * n 
+
+        # 使用@cache装饰器优化时间复杂度，原理类似于使用哈希表或者哈希数组
+        @cache 
+        def dfs(i):
+            if i < 0:
+                return 0
+            if cache[i] != -1:
+                return cache[i]
+            res = max(dfs(i-1),dfs(i-2)+nums[i])
+            cache[i] = res
+            return res 
+
+        return dfs(n-1)
+
+
+class Solution:
+    def rob(self,nums:List[int]):
+        n = len(nums)
+        dp = [0] * (n+2)
+        for i,x in enumerate(nums):
+            dp[i+2] = max(dp[i+1],dp[i]+x)
+
+        return dp[n+1]
+
+    def rob2(self,nums:List[int]):
+        n = len(nums)
+        dp = [0] * (n+2)
+        for i x in enumerate(nums):
+            dp[i+1] = max(dp[i+1],dp[i]+x)
+
+        return dp[n+1]
+
+    def bob3(self,nums:List[int]):
+        n = len(nums)
+        dp0 = dp1 = 1 
+        for i,x in  enumerate(nums):
+            new_dp = max(dp1,dp0+x)
+            dp0 = dp1 
+            dp1 = new_dp
+
+        return dp1 
+
+
+# leetcode 01背包
+# capacity 背包容量
+# w[i]: 第i个物品的体积
+# v[i]: 第i个物品的价值
+# 返回：所选物品体积不超过capacity的前提下，所能得到的最大价值和
+def zero_one_knapsack(capacity:int,w:List[int],v:List[int]):
+    n = len(w)
+    
+    @cache
+    def dfs(i,c):
+        if i < 0:
+            return 0 
+        if c < w[i]:
+            return dfs(i-1,c) 
+        return max(dfs(i-1,c),dfs(i-1,c-w[i]) + v[i])
+
+    return dfs(n-1,capacity)
+
+# leetcode 494 目标和
+class Solution:
+    def findTargetSumWay(self,nums:List[int],target:int):
+        # 假设正数的和为p 
+        # 负数和为s-p 
+        # p - (s-p) = target 
+        # p = (s+t) /2 
+        # 问题转换为找出正数和为(s+p)/2的方案数了
+        target += sum(nums)
+        if target < 0 or target % 2 == 1:
+            return 0 
+        target //= 2 
+        n = len(nums)          
+    
+        @cache
+        def dfs(i,c):
+            if i < 0:
+                return 1 if c == 0 else 0
+            if c < nums[i]:
+                return dfs(i-1,c) 
+            return dfs(i-1,c) + dfs(i-1,c-nums[i])
+
+        return dfs(n-1,target)
+    
+    def findTargetSumWay2(self,nums:List[int],target:int):
+        target += sum(nums)
+        if target < 0 or target % 2 == 1:
+            return 0 
+        target //= 2 
+        n = len(nums)
+        dp = [[0] * (target+1) for _ in range(n+1)]
+        dp[0][0] == 1 
+        for i, x in enumerate(nums):
+            for c in range(target+1):
+                if c < x:
+                    dp[i+1][c] = f[i][c]
+                else:
+                    dp[i+1][c] = dp[i][c] + f[i][c-x]
+
+        return dp[n][target]
 
