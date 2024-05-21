@@ -37,9 +37,7 @@ for 状态1 in 状态1的所有取值：
 
 # leetcode 509 斐波那契数列
 from functools import cache
-from typing import List, cast
-
-from code_practice import dynamic_programming
+from typing import List
 
 
 class Solution:
@@ -59,9 +57,9 @@ class Solution:
             return n
         if self.memo[n]!= 0:
             return self.memo[n]
-       self.memo[n] = self.dp(n-1) + self.dp(n-2)
+        self.memo[n] = self.dp(n-1) + self.dp(n-2)
 
-       return self.memo[n]
+        return self.memo[n]
 
 
 class Solution:

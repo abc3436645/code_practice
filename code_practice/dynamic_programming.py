@@ -48,8 +48,8 @@ def climb_stairs(n: int) -> int:
     dp[1] = 1
     dp[2] = 2
 
-    for i in range(n + 1):  # 遍历顺序
-        dp = dp[i - 1] + dp[i - 2]
+    for i in range(3,n + 1):  # 遍历顺序
+        dp[i] = dp[i - 1] + dp[i - 2]
 
     print("dp数组：", dp)  # 5.举例check dp数组
     return dp[n]

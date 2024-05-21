@@ -9,8 +9,6 @@ while条件也可以从不满足要求到满足要求
 
 from typing import Counter, List
 
-from code_practice.dynamic_programming import length_of_LIS
-
 
 class Solution:
     def minSubArrayLen(self, target: int, nums: List[int]):
