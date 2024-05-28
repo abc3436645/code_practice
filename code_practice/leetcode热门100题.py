@@ -122,7 +122,7 @@ class Solution:
                 while lo < ro and nums[ro] == right:
                     ro -= 1
             elif _sum == target:
-                result.append(left, right)
+                result.append([left, right])
                 while lo < right and nums[lo] == left:
                     lo += 1
                 while ro < right and nums[ro] == right:
@@ -143,7 +143,7 @@ def twoSumTarget(nums:List[int],start:int,target:int) -> List[int]:
             while lo < ro and nums[ro] == right:
                 ro -= 1
         elif _sum == target:
-            result.append(left, right)
+            result.append([left, right])
             while lo < right and nums[lo] == left:
                 lo += 1
             while ro < right and nums[ro] == right:
