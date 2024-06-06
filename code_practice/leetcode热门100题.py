@@ -16,6 +16,8 @@
 """
 from typing import List
 
+from code_practice.排序算法 import partition
+
 
 def moveZeroes(nums: List[int]) -> None:
     """
@@ -1057,6 +1059,41 @@ def plus_one(digits:List[int]):
         res = [0] * (digits+1)
         res[0] = 1
     return res
+
+
+# leetcode 215 数组中的第K个最大元素
+class Solution:
+    def findKthLargest(self,nums:List[int],k:int):
+        lo, hi = 0, len(nums)-1
+        k = len(nums) - k
+        while lo < hi:
+            p = self.partition(nums,lo,hi)
+            if p < k:
+                lo = p + 1 
+            if p > k:
+                hi = p - 1
+            else:
+                return nums[p]
+        return -1 
+    
+    def partition(self,nums:List[int],low:int,high:int):
+        pivot = nums[low]
+        i,j = low+1,high
+        while i <= j:
+            while i < j and nums[i] <= pivot:
+                i += 1 
+            while i < j and nums[j] > pivot:
+                j += 1 
+
+            if i >= j:
+                break
+            nums[i],nums[j] = nums[j],nums[i]
+        
+        nums[low],nums[j] = nums[j],nums[low]
+        return j 
+        
+
+
 
 
 if __name__ == "__main__":
