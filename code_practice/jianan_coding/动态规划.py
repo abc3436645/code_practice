@@ -36,7 +36,6 @@ for 状态1 in 状态1的所有取值：
 """
 
 # leetcode 509 斐波那契数列
-from functools import cache
 from typing import List
 
 
@@ -44,7 +43,6 @@ class Solution:
     def fib(self, n: int) -> int:
         self.memo = [0] * (n+1) # 备忘录
         return self.dp(n)
-
 
     def dp(self, n: int) -> int:
         """

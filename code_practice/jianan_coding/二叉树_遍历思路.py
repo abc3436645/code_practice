@@ -344,13 +344,11 @@ class Solution:
     def traverse(self, root: TreeNode):
         if not root:
             return
+        self.count[root.val] += 1
         if not root.left and not root.right:
-            self.count[root.val] += 1
             odd = sum([1 for n in self.count if n % 2 == 1])
             if odd <= 1:
                 self.res += 1
-            self.count[root.val] -= 1
-        self.count[root.val] += 1
         self.traverse(root.left)
         self.traverse(root.right)
         self.count[root.val] -= 1
