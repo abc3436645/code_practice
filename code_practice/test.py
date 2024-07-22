@@ -1,12 +1,11 @@
-import pandas as pd 
+import pandas as pd
 
 from loguru import logger
 
-from code_practice.index import main
 
 logger.info("hello lazyvim")
 
+a = 1234
 
-if __name__ = "main()":
+if __name__ == "main()":
     pass
-

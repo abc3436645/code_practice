@@ -41,36 +41,34 @@ from typing import List
 
 class Solution:
     def fib(self, n: int) -> int:
-        self.memo = [0] * (n+1) # 备忘录
+        self.memo = [0] * (n + 1)  # 备忘录
         return self.dp(n)
 
     def dp(self, n: int) -> int:
-        """
-        
-        """
+        """ """
         if n < 0:
-            return -1 
-        # base case 
-        if n == 0 or n == 1 :
+            return -1
+        # base case
+        if n == 0 or n == 1:
             return n
-        if self.memo[n]!= 0:
+        if self.memo[n] != 0:
             return self.memo[n]
-        self.memo[n] = self.dp(n-1) + self.dp(n-2)
+        self.memo[n] = self.dp(n - 1) + self.dp(n - 2)
 
         return self.memo[n]
 
 
 class Solution:
     def fib(self, n: int) -> int:
-        dp = [0] * (n+1)  # dp数组
-        # base case 
-        dp[0] = 0 
-        dp[1] = 1 
-        for i in range(2,n+1): # 遍历顺序 状态
-            dp[i] = dp[i-1] + dp[i-2] # 状态转移方程
+        dp = [0] * (n + 1)  # dp数组
+        # base case
+        dp[0] = 0
+        dp[1] = 1
+        for i in range(2, n + 1):  # 遍历顺序 状态
+            dp[i] = dp[i - 1] + dp[i - 2]  # 状态转移方程
 
         return dp[n]
-        
+
 
 # leetcode 322 零钱兑换
 # 给你 k 种面值的硬币，面值分别为 c1, c2 ... ck，每种硬币的数量无限，再给一个总金额 amount，问你最少需要几枚硬币凑出这个金额，如果不可能凑出，算法返回 -1
@@ -83,24 +81,24 @@ class Solution:
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
         self.memo = [-666] * (amount + 1)
-        return self.dp(coins,amount)
+        return self.dp(coins, amount)
 
-    def dp(self, coins: List[int], amount:int) -> int:
+    def dp(self, coins: List[int], amount: int) -> int:
         """
         对应二叉树分解问题思路：定义：要凑出金额 amount，至少要 dp(coins, n) 个硬币
         """
         res = float("inf")
         if amount < 0:
             return -1
-        if amount == 0 :
+        if amount == 0:
             return 0
         if self.memo[amount] != -666:
             return self.memo[amount]
         for coin in coins:  # N叉树 递归遍历
-            sub_problem = self.dp(coins,amount-coin)  # N叉树遍历
-            if sub_problem == -1: # 后续遍历
+            sub_problem = self.dp(coins, amount - coin)  # N叉树遍历
+            if sub_problem == -1:  # 后续遍历
                 continue
-            res = min(res,sub_problem+1) 
+            res = min(res, sub_problem + 1)
         self.memo[amount] = -1 if res == float("inf") else res
         return self.memo[amount]
 
@@ -108,16 +106,16 @@ class Solution:
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
         # dp 数组的定义：当目标金额为 i 时，至少需要 dp[i] 枚硬币凑出。
-        dp = [amount+1] * (amount+1)
+        dp = [amount + 1] * (amount + 1)
         dp[0] = 0
         # 外层 for 循环在遍历所有状态的所有取值
-        for i in range(amount+1):
+        for i in range(amount + 1):
             # 内层 for 循环在求所有选择的最小值
-            for coin in coins:  
-                if i -coin < 0: # 子问题无解
+            for coin in coins:
+                if i - coin < 0:  # 子问题无解
                     continue
-                dp[i] = min(dp[i],dp[i-coin]+1)
-        return -1 if dp[amount] == amount+1 else dp[amount]
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+        return -1 if dp[amount] == amount + 1 else dp[amount]
 
 
 # leetcode 300. 最长递增子序列
@@ -125,19 +123,20 @@ class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         # 定义：dp[i] 表示以 nums[i] 这个数结尾的最长递增子序列的长度
         dp = [1] * len(nums)
-        dp[1] = 1 
-        for i in range(2,len(nums)):
+        dp[1] = 1
+        for i in range(2, len(nums)):
             for j in range(i):
                 if nums[i] > nums[j]:
-                    dp[i] = max(dp[i],dp[j]+1)
+                    dp[i] = max(dp[i], dp[j] + 1)
         return max(dp)
+
 
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         # TODO
         pass
 
-    def dp(self, nums: List[int],i:int) -> int:
+    def dp(self, nums: List[int], i: int) -> int:
         """
         dp函数定义：以nums[i] 这个数结尾的最长递增子序列的长度
         """
@@ -152,49 +151,47 @@ class Solution:
         m = len(word1)
         n = len(word2)
 
-        return self.dp(word1, m-1, word2, n-1)
+        return self.dp(word1, m - 1, word2, n - 1)
 
-
-    def dp(self, word1: str,i:int, word2: str,j:int) -> int:
+    def dp(self, word1: str, i: int, word2: str, j: int) -> int:
         """
         dp函数定义：定义：s1[0..i] 和 s2[0..j] 的最小编辑距离是 dp(s1, i, s2, j)
         """
         # base case
-        if i == -1 : # 空串s1
-            return j + 1 
-        if j == -1 : # 空串s2
-            return i+1 
+        if i == -1:  # 空串s1
+            return j + 1
+        if j == -1:  # 空串s2
+            return i + 1
         if word1[i] == word2[j]:
-            return self.dp(word1,i-1,word2,j-1)
+            return self.dp(word1, i - 1, word2, j - 1)
         else:
             return min(
-                self.dp(word1,i-1,word2,j-1) + 1,
-                self.dp(word1, i, word2, j-1) + 1,
-                self.dp(word1, i-1, word2, j) + 1 
+                self.dp(word1, i - 1, word2, j - 1) + 1,
+                self.dp(word1, i, word2, j - 1) + 1,
+                self.dp(word1, i - 1, word2, j) + 1,
             )
 
+
 class Solution:
-    def minDistance(self,s1: str, s2: str) -> int:
+    def minDistance(self, s1: str, s2: str) -> int:
         m, n = len(s1), len(s2)
         # 定义：s1[0..i] 和 s2[0..j] 的最小编辑距离是 dp[i+1][j+1]
         dp = [[0] * (n + 1) for _ in range(m + 1)]
-        # 初始化 base case 
+        # 初始化 base case
         for i in range(1, m + 1):
-           dp[i][0] = i
+            dp[i][0] = i
         for j in range(1, n + 1):
-           dp[0][j] = j
-    
+            dp[0][j] = j
+
         # 自底向上求解
         for i in range(1, m + 1):
             for j in range(1, n + 1):
                 # 进行状态转移
-                if s1[i-1] == s2[j-1]:
+                if s1[i - 1] == s2[j - 1]:
                     dp[i][j] = dp[i - 1][j - 1]
                 else:
                     dp[i][j] = min(
-                         dp[i - 1][j] + 1,
-                         dp[i][j - 1] + 1,
-                         dp[i - 1][j - 1] + 1
+                        dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1
                     )
         # 按照 dp 数组的定义，存储 s1 和 s2 的最小编辑距离
         return dp[m][n]
@@ -220,51 +217,52 @@ class Solution:
 # 递推：dp[i] = max(dp[i-1],dp[i-2]+nums[i])
 # 为防止溢出： dp[i+2] = max(dp[i+1],dp[i]+nums[i])
 
+
 class Solution:
-    def rob(self,nums:List[int]):
+    def rob(self, nums: List[int]):
         n = len(nums)
-        cache = [-1] * n 
+        cache = [-1] * n
 
         # 使用@cache装饰器优化时间复杂度，原理类似于使用哈希表或者哈希数组
-        @cache 
+        @cache
         def dfs(i):
             if i < 0:
                 return 0
             if cache[i] != -1:
                 return cache[i]
-            res = max(dfs(i-1),dfs(i-2)+nums[i])
+            res = max(dfs(i - 1), dfs(i - 2) + nums[i])
             cache[i] = res
-            return res 
+            return res
 
-        return dfs(n-1)
+        return dfs(n - 1)
 
 
 class Solution:
-    def rob(self,nums:List[int]):
+    def rob(self, nums: List[int]):
         n = len(nums)
-        dp = [0] * (n+2)
-        for i,x in enumerate(nums):
-            dp[i+2] = max(dp[i+1],dp[i]+x)
+        dp = [0] * (n + 2)
+        for i, x in enumerate(nums):
+            dp[i + 2] = max(dp[i + 1], dp[i] + x)
 
-        return dp[n+1]
+        return dp[n + 1]
 
-    def rob2(self,nums:List[int]):
+    def rob2(self, nums: List[int]):
         n = len(nums)
-        dp = [0] * (n+2)
-        for i x in enumerate(nums):
-            dp[i+1] = max(dp[i+1],dp[i]+x)
+        dp = [0] * (n + 2)
+        for i, x in enumerate(nums):
+            dp[i + 1] = max(dp[i + 1], dp[i] + x)
 
-        return dp[n+1]
+        return dp[n + 1]
 
-    def bob3(self,nums:List[int]):
+    def bob3(self, nums: List[int]):
         n = len(nums)
-        dp0 = dp1 = 1 
-        for i,x in  enumerate(nums):
-            new_dp = max(dp1,dp0+x)
-            dp0 = dp1 
+        dp0 = dp1 = 1
+        for i, x in enumerate(n):
+            new_dp = max(dp1, dp0 + x)
+            dp0 = dp1
             dp1 = new_dp
 
-        return dp1 
+        return dp1
 
 
 # leetcode 01背包
@@ -272,57 +270,57 @@ class Solution:
 # w[i]: 第i个物品的体积
 # v[i]: 第i个物品的价值
 # 返回：所选物品体积不超过capacity的前提下，所能得到的最大价值和
-def zero_one_knapsack(capacity:int,w:List[int],v:List[int]):
+def zero_one_knapsack(capacity: int, w: List[int], v: List[int]):
     n = len(w)
-    
-    @cache
-    def dfs(i,c):
-        if i < 0:
-            return 0 
-        if c < w[i]:
-            return dfs(i-1,c) 
-        return max(dfs(i-1,c),dfs(i-1,c-w[i]) + v[i])
 
-    return dfs(n-1,capacity)
+    @cache
+    def dfs(i, c):
+        if i < 0:
+            return 0
+        if c < w[i]:
+            return dfs(i - 1, c)
+        return max(dfs(i - 1, c), dfs(i - 1, c - w[i]) + v[i])
+
+    return dfs(n - 1, capacity)
+
 
 # leetcode 494 目标和
 class Solution:
-    def findTargetSumWay(self,nums:List[int],target:int):
-        # 假设正数的和为p 
-        # 负数和为s-p 
-        # p - (s-p) = target 
-        # p = (s+t) /2 
+    def findTargetSumWay(self, nums: List[int], target: int):
+        # 假设正数的和为p
+        # 负数和为s-p
+        # p - (s-p) = target
+        # p = (s+t) /2
         # 问题转换为找出正数和为(s+p)/2的方案数了
         target += sum(nums)
         if target < 0 or target % 2 == 1:
-            return 0 
-        target //= 2 
-        n = len(nums)          
-    
+            return 0
+        target //= 2
+        n = len(nums)
+
         @cache
-        def dfs(i,c):
+        def dfs(i, c):
             if i < 0:
                 return 1 if c == 0 else 0
             if c < nums[i]:
-                return dfs(i-1,c) 
-            return dfs(i-1,c) + dfs(i-1,c-nums[i])
+                return dfs(i - 1, c)
+            return dfs(i - 1, c) + dfs(i - 1, c - nums[i])
 
-        return dfs(n-1,target)
-    
-    def findTargetSumWay2(self,nums:List[int],target:int):
+        return dfs(n - 1, target)
+
+    def findTargetSumWay2(self, nums: List[int], target: int):
         target += sum(nums)
         if target < 0 or target % 2 == 1:
-            return 0 
-        target //= 2 
+            return 0
+        target //= 2
         n = len(nums)
-        dp = [[0] * (target+1) for _ in range(n+1)]
-        dp[0][0] == 1 
+        dp = [[0] * (target + 1) for _ in range(n + 1)]
+        dp[0][0] == 1
         for i, x in enumerate(nums):
-            for c in range(target+1):
+            for c in range(target + 1):
                 if c < x:
-                    dp[i+1][c] = f[i][c]
+                    dp[i + 1][c] = f[i][c]
                 else:
-                    dp[i+1][c] = dp[i][c] + f[i][c-x]
+                    dp[i + 1][c] = dp[i][c] + f[i][c - x]
 
         return dp[n][target]
-

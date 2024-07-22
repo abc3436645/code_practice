@@ -7,9 +7,9 @@ def bubble_sort(nums:list):
     时间复杂度：O(N*N)
     """
     nums_len = len(nums)
-    for i in range(nums_len-1): ##n-1趟
-        for j in range(nums_len-i-1): ##遍历
-            if nums[j] > nums[j+1]: ##控制算法从大到小或者从小到大排序
+    for i in range(nums_len-1): ## n趟
+        for j in range(nums_len-i-1): ## 遍历
+            if nums[j] > nums[j+1]: ## 控制算法从大到小或者从小到大排序
                 nums[j], nums[j+1] = nums[j+1], nums[j]
 
     return nums

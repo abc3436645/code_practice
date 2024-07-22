@@ -60,7 +60,7 @@ class Solution:
 
     def permuteUnique(self,nums:List[int]):
         nums.sort()
-        self.used = [False] * len*(nums)
+        self.used = [False] * len(nums)
         self.backtracking(nums)
         return self.res
 
@@ -69,12 +69,12 @@ class Solution:
             self.res.append(self.path[:])
             return
         
-        for i,nums in enumerate(nums):
+        for i,num in enumerate(nums):
             if self.used[i]:
                 continue
             if i > 0 and nums[i] == nums[i-1] and not self.used[i-1]:
                 continue
-            self.path.append(nums)
+            self.path.append(num)
             self.used[i] = True
             self.backtracking(nums)
             self.used[i] = False

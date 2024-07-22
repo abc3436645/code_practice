@@ -16,10 +16,7 @@
 """
 from typing import List
 
-from code_practice.排序算法 import partition
-
-
-def moveZeroes(nums: List[int]) -> None:
+def moveZeroes(nums: List[int]):
     """
     思路：双指针,快慢指针，交换快慢指针的值，不断维护nums[0:left]
     将nums[left:]所有元素替换为0
@@ -211,7 +208,7 @@ class ListNode:
         self.next = next
 
 class Solution:
-    def merge_two_list(self,l1:List[ListNode],l2:List[ListNode]):
+    def merge_two_list(self,l1:ListNode,l2:ListNode):
         pre_head = ListNode(val=-1)
         result = pre_head
         while l1 and l2:
@@ -244,7 +241,7 @@ Output: 1->1->2->3->4->4->5->6
 思路：
 借助分治的思想，把 K 个有序链表两两合并即可。相当于是第 21 题的加强版
 """
-def merge_two_list(l1:List[ListNode], l2:List[ListNode]):
+def merge_two_list(l1:ListNode, l2:ListNode):
     if not l1 :
         return l2
     if not l2 :
@@ -265,7 +262,7 @@ def merge_two_list(l1:List[ListNode], l2:List[ListNode]):
 
     return result.next
 
-def merge_two_list_2(l1:List[ListNode], l2:List[ListNode]):
+def merge_two_list_2(l1:ListNode, l2:ListNode):
     if not l1:
         return l2
     if not l2:
